@@ -1,0 +1,264 @@
+// Braden McConville
+// Final Project - Drink Machine Simulator
+
+#include <iostream>
+#include <iomanip>
+#include <fstream>
+using namespace std;
+
+class drinkMachine {
+
+	struct {
+		string drinkName = "Cola";
+		double drinkPrice = 1.00;
+		int drinkStock = 20;
+	} drinkCola;
+
+	struct {
+		string drinkName = "Root beer";
+		double drinkPrice = 1.00;
+		int drinkStock = 20;
+	} drinkRootBeer;
+
+	struct {
+		string drinkName = "Orange soda";
+		double drinkPrice = 1.00;
+		int drinkStock = 20;
+	} drinkOrangeSoda;
+
+	struct {
+		string drinkName = "Grape soda";
+		double drinkPrice = 1.00;
+		int drinkStock = 20;
+	} drinkGrapeSoda;
+
+	struct {
+		string drinkName = "Bottled water";
+		double drinkPrice = 1.50;
+		int drinkStock = 20;
+	} drinkBottledWater;
+
+    private:
+
+    // Prompts user to enter the amount associated with the chosen drink
+    double inputMoney(string choice, double payment) {
+
+		while(true) {
+			if(choice == drinkBottledWater.drinkName) {
+				cout << "\nPlease input " << drinkBottledWater.drinkPrice << " to pay for your drink: ";
+				cin >> payment;
+				if(payment < drinkBottledWater.drinkPrice) {
+					cout << "\nInsufficient payment. Please try again.\n";
+				}
+				else {
+					return payment;
+				}
+            }
+			else {
+				cout << "\nPlease input " << drinkCola.drinkPrice << " to pay for your drink: ";
+				cin >> payment;
+				if(payment < drinkCola.drinkPrice) {
+					cout << "\nInsufficient payment. Please try again.\n";
+				}
+				else {
+					return payment;
+				}
+			}
+		}
+	}
+
+    // Determines whether the requested drink is in stock
+    bool drinkInStock(string choice) {
+
+		if(choice == drinkCola.drinkName) {
+			if(drinkCola.drinkStock == 0) {
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
+		else if(choice == drinkRootBeer.drinkName) {
+			if(drinkRootBeer.drinkStock == 0) {
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
+		else if(choice == drinkOrangeSoda.drinkName) {
+			if(drinkOrangeSoda.drinkStock == 0) {
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
+		else if(choice == drinkGrapeSoda.drinkName) {
+			if(drinkGrapeSoda.drinkStock == 0) {
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
+		else {
+			if(drinkBottledWater.drinkStock == 0) {
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
+	}
+
+	// Determines whether the user is owed change and if so displays the amount
+	void getChange(double payment) {
+
+		if(payment != 0) {
+			cout << "\nYou've received $" << payment << " in change.\n";
+		}
+		cout << "Enjoy your drink!\n\n";
+	}
+
+	public:
+
+    double total;
+
+    // Displays a menu for user to select a drink or exit the program
+    string displayChoices(string choice) {
+
+		int num;
+
+		while(true) {
+			cout << "1. " << drinkCola.drinkName << " (" << drinkCola.drinkStock << " in stock)" << "\n";
+			cout << "2. " << drinkRootBeer.drinkName << " (" << drinkRootBeer.drinkStock << " in stock)" << "\n";
+			cout << "3. " << drinkOrangeSoda.drinkName << " (" << drinkOrangeSoda.drinkStock << " in stock)" << "\n";
+			cout << "4. " << drinkGrapeSoda.drinkName << " (" << drinkGrapeSoda.drinkStock << " in stock)" << "\n";
+			cout << "5. " << drinkBottledWater.drinkName << " (" << drinkBottledWater.drinkStock << " in stock)" << "\n";
+			cout << "6. Exit program" << "\n";
+			cout << "Please enter 1-5 to select a drink or 6 to exit: ";
+			cin >> num;
+
+			if(num == 1) {
+				choice = drinkCola.drinkName;
+				return choice;
+			}
+			else if (num == 2) {
+				choice = drinkRootBeer.drinkName;
+				return choice;
+			}
+			else if (num == 3) {
+				choice = drinkOrangeSoda.drinkName;
+				return choice;
+			}
+			else if (num == 4) {
+				choice = drinkGrapeSoda.drinkName;
+				return choice;
+			}
+			else if (num == 5) {
+				choice = drinkBottledWater.drinkName;
+				return choice;
+			}
+			else if (num == 6) {
+				choice = "exit";
+				return choice;
+			}
+			else {
+				cout << "\nInvalid. Please enter a number between 1 and 6.\n\n";
+			}
+		}
+	}
+
+    // Allows user to cancel or continue with their purchase and records any changes made to the quantity of drinks in stock and the total amount of money collected
+    void buyDrink(string choice) {
+
+		double payment;
+		char answer;
+
+		payment = inputMoney(choice, payment);
+		cout << "\nYou want to purchase: " << choice << "? (y or n): ";
+		cin >> answer;
+		if(answer == 'n') {
+			payment = 0;
+			cout << "\nYour money has been returned. Have a nice day.\n\n";
+		}
+		else {
+			if(!drinkInStock(choice)) {
+				payment = 0;
+				cout << "\nThe requested drink is sold out. Your money has been returned. Have a nice day.\n\n";
+			}
+			else {
+				if(choice == drinkCola.drinkName) {
+					drinkCola.drinkStock -= 1;
+					total += drinkCola.drinkPrice;
+					payment -= drinkCola.drinkPrice;
+					getChange(payment);
+				}
+				else if(choice == drinkRootBeer.drinkName) {
+					drinkRootBeer.drinkStock -= 1;
+					total += drinkRootBeer.drinkPrice;
+					payment -= drinkRootBeer.drinkPrice;
+					getChange(payment);
+				}
+				else if(choice == drinkOrangeSoda.drinkName) {
+					drinkOrangeSoda.drinkStock -= 1;
+					total += drinkOrangeSoda.drinkPrice;
+					payment -= drinkOrangeSoda.drinkPrice;
+					getChange(payment);
+				}
+				else if(choice == drinkGrapeSoda.drinkName) {
+					drinkGrapeSoda.drinkStock -= 1;
+					total += drinkGrapeSoda.drinkPrice;
+					payment -= drinkGrapeSoda.drinkPrice;
+					getChange(payment);
+				}
+				else {
+					drinkBottledWater.drinkStock -= 1;
+					total += - drinkBottledWater.drinkPrice;
+					payment -= drinkBottledWater.drinkPrice;
+					getChange(payment);
+				}
+			}
+		}
+	}
+
+	// Creates a file that lists the quantity of drinks in the machine and the total amount of money collected
+	void dailyReport() {
+
+		ofstream report_file("Daily_Report.txt");
+		report_file << drinkCola.drinkName << " in stock: " << drinkCola.drinkStock << "\n";
+		report_file << drinkRootBeer.drinkName << " in stock: " << drinkRootBeer.drinkStock << "\n";
+		report_file << drinkOrangeSoda.drinkName << " in stock: " << drinkOrangeSoda.drinkStock << "\n";
+		report_file << drinkGrapeSoda.drinkName << " in stock: " << drinkGrapeSoda.drinkStock << "\n";
+		report_file << drinkBottledWater.drinkName << " in stock: " << drinkBottledWater.drinkStock << "\n\n";
+		report_file << "Money collected: $" << total;
+		report_file.close();
+	}
+
+	// Calls the destructor to call the dailyReport function
+	~drinkMachine() {
+		dailyReport();
+	}
+};
+
+int main() {
+
+	string choice;
+
+	drinkMachine dm;
+
+    cout << fixed;
+    cout << setprecision(2);
+
+	while(true) {
+		choice = dm.displayChoices(choice);
+		if(choice == "exit") {
+			break;
+		}
+		dm.buyDrink(choice);
+	}
+	dm.~drinkMachine();
+
+	return 0;
+}
